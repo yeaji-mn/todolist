@@ -1,0 +1,525 @@
+/* ── Layout ── */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: #f0f2f5;
+  font-family: system-ui, sans-serif;
+  padding: 2rem;
+  box-sizing: border-box;
+  gap: 1.5rem;
+}
+
+.left-panel {
+  flex-shrink: 0;
+  width: 280px;
+  position: sticky;
+  top: 2rem;
+}
+
+/* ── Calendar ── */
+
+.calendar {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.cal-month-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.2rem 0.4rem;
+}
+
+.cal-month-label:hover {
+  background: #f0f2f5;
+}
+
+.cal-nav {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #555;
+  padding: 0 0.25rem;
+  line-height: 1;
+  border-radius: 4px;
+}
+
+.cal-nav:hover {
+  background: #f0f2f5;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-day-name {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #aaa;
+  padding: 0.3rem 0;
+}
+
+.cal-day {
+  text-align: center;
+  font-size: 0.85rem;
+  padding: 0.4rem 0;
+  border-radius: 6px;
+  color: #ccc;
+  cursor: default;
+  user-select: none;
+}
+
+.cal-day-active {
+  color: #333;
+  cursor: pointer;
+}
+
+.cal-day-active:hover {
+  background: #f0f2f5;
+}
+
+.cal-day-today {
+  font-weight: 700;
+  color: #1a1a2e;
+  position: relative;
+}
+
+.cal-day-today::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #e74c3c;
+}
+
+.cal-day-selected {
+  background: #1a1a2e;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.cal-day-selected:hover {
+  background: #1a1a2e;
+}
+
+/* ── Month/Year Picker ── */
+
+.picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+
+.picker {
+  position: absolute;
+  top: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  width: 220px;
+  z-index: 201;
+}
+
+.picker-year-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.picker-year-input {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1a1a2e;
+  width: 70px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.2rem 0.4rem;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.picker-year-input::-webkit-outer-spin-button,
+.picker-year-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.picker-month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.picker-month {
+  text-align: center;
+  padding: 0.5rem 0;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.picker-month:hover {
+  background: #f0f2f5;
+}
+
+.picker-month.picker-month-active {
+  background: #1a1a2e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── Todo Card ── */
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.card h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.date {
+  margin: 0.25rem 0 0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.toggle-bar {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.toggle-btn {
+  padding: 0.4rem 0.9rem;
+  border: none;
+  background: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.toggle-btn.active {
+  background: #1a1a2e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── Week View ── */
+
+.card--wide {
+  max-width: none;
+}
+
+.week-view {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: auto;
+}
+
+.week-section {
+  flex: 1;
+  min-width: 120px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.week-resize-handle {
+  width: 5px;
+  flex-shrink: 0;
+  background: #eee;
+  cursor: col-resize;
+  transition: background 0.15s;
+}
+
+.week-resize-handle:hover,
+.week-resize-handle:active {
+  background: #adb5bd;
+}
+
+.week-day-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.6rem 0.5rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.week-day-header.today {
+  background: #1a1a2e;
+}
+
+.week-day-header.today .week-day-name,
+.week-day-header.today .week-day-date {
+  color: #fff;
+}
+
+.week-day-header.today .week-add-btn {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.week-day-header.today .week-add-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.week-day-name {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #1a1a2e;
+}
+
+.week-day-date {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.week-add-btn {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.week-add-btn:hover {
+  background: #e9ecef;
+}
+
+.week-section .list {
+  padding: 0.5rem 0.4rem;
+}
+
+.week-section .item {
+  flex-direction: column;
+  align-items: flex-start;
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+  border-radius: 0;
+  padding: 0.4rem 0.25rem;
+  gap: 0.25rem;
+}
+
+.week-section .item:last-child {
+  border-bottom: none;
+}
+
+.week-section .item-actions {
+  align-self: flex-end;
+}
+
+.week-empty {
+  margin: 0;
+  padding: 0.6rem 0.5rem;
+  font-size: 0.8rem;
+  color: #bbb;
+  text-align: center;
+}
+
+.status {
+  color: #555;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.status.error {
+  color: #e74c3c;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #f8f9fa;
+  border: 1px solid #eee;
+}
+
+.item-checkbox {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: #1a1a2e;
+}
+
+.item-title {
+  font-size: 1rem;
+  color: #222;
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.item-title.completed {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.item-actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.icon-button:hover {
+  background: #e9ecef;
+}
+
+.add-button {
+  margin-top: 1.25rem;
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px dashed #ccc;
+  background: transparent;
+  color: #555;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* ── Modal ── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.modal h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.cancel-button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f8f9fa;
+  color: #555;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.submit-button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
