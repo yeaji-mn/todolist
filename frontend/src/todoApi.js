@@ -9,33 +9,35 @@ export async function fetchTodosByDate(dateParam) {
   return res.json()
 }
 
-export async function createTodo(title, dueDate) {
+export async function createTodo(data) {
   const res = await fetch('/todos', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, completed: false, dueDate }),
+    body: JSON.stringify({ completed: false, ...data }),
   })
   await checkResponse(res)
   return res.json()
 }
 
-export async function toggleTodo(id) {
-  const res = await fetch(`/todos/${id}/complete`, { method: 'PATCH' })
+export async function toggleTodo(id, dateParam) {
+  const url = dateParam ? `/todos/${id}/complete?date=${dateParam}` : `/todos/${id}/complete`
+  const res = await fetch(url, { method: 'PATCH' })
   await checkResponse(res)
   return res.json()
 }
 
-export async function updateTodo(id, title, completed, dueDate) {
+export async function updateTodo(id, data) {
   const res = await fetch(`/todos/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, completed, dueDate }),
+    body: JSON.stringify(data),
   })
   await checkResponse(res)
   return res.json()
 }
 
-export async function deleteTodo(id) {
-  const res = await fetch(`/todos/${id}`, { method: 'DELETE' })
+export async function deleteTodo(id, dateParam) {
+  const url = dateParam ? `/todos/${id}?date=${dateParam}` : `/todos/${id}`
+  const res = await fetch(url, { method: 'DELETE' })
   await checkResponse(res)
 }

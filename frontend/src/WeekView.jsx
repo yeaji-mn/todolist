@@ -53,7 +53,7 @@ export default function WeekView({ weekData, onToggle, onEdit, onDelete, onAdd }
               </div>
               {todos.length === 0
                 ? <p className="week-empty">No todos</p>
-                : <TodoList todos={todos} onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
+                : <TodoList todos={todos} dateParam={toDateParam(date)} onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
               }
             </div>
             {i < weekData.length - 1 && (

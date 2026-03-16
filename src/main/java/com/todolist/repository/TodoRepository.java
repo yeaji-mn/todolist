@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     List<Todo> findByDueDate(LocalDate date);
+    List<Todo> findByDueDateAndRecurrenceTypeIsNull(LocalDate date);
+    List<Todo> findByRecurrenceTypeIsNotNull();
 }

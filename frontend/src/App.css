@@ -523,3 +523,98 @@
   font-size: 0.95rem;
   cursor: pointer;
 }
+
+.delete-series-button {
+  margin-top: 0.75rem;
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #e53e3e;
+  background: transparent;
+  color: #e53e3e;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.delete-series-button:hover {
+  background: #e53e3e;
+  color: #fff;
+}
+
+/* ── Recurring Todos ── */
+
+.add-buttons {
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.add-buttons .add-button {
+  margin-top: 0;
+  flex: 1;
+}
+
+.add-button--recurring {
+  border-color: #7c5cbf;
+  color: #7c5cbf;
+}
+
+.add-button--recurring:hover {
+  background: #f5f0ff;
+}
+
+.recurrence-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #7c5cbf;
+  background: #f0ebff;
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.recurrence-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.recurrence-label {
+  font-size: 0.85rem;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.recurrence-types {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.recurrence-type-btn {
+  padding: 0.35rem 0.75rem;
+  border: none;
+  background: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.recurrence-type-btn.active {
+  background: #7c5cbf;
+  color: #fff;
+  font-weight: 600;
+}
+
+.recurrence-select {
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  outline: none;
+  color: #333;
+}

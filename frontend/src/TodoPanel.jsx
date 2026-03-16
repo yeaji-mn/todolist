@@ -16,21 +16,24 @@ export default function TodoPanel({ selectedDate }) {
   const [saving, setSaving] = useState(false)
   const [editingTodo, setEditingTodo] = useState(null)
 
-  useEffect(() => {
+  function refetch() {
     setLoading(true)
     setError(null)
     if (view === 'day') {
-      fetchTodosByDate(toDateParam(selectedDate))
+      return fetchTodosByDate(toDateParam(selectedDate))
         .then(data => { setTodos(data); setLoading(false) })
         .catch(err => { setError(err.message); setLoading(false) })
     } else {
-      Promise.all(getWeekDates(selectedDate).map(d =>
+      const dates = getWeekDates(selectedDate)
+      return Promise.all(dates.map(d =>
         fetchTodosByDate(toDateParam(d)).then(todos => ({ date: d, todos }))
       ))
-        .then(data => { setWeekData(data); setLoading(false) })
+        .then(results => { setWeekData(results); setLoading(false) })
         .catch(err => { setError(err.message); setLoading(false) })
     }
-  }, [selectedDate, view])
+  }
+
+  useEffect(() => { refetch() }, [selectedDate, view]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function updateTodoInState(updated) {
     if (view === 'day') {
@@ -52,42 +55,71 @@ export default function TodoPanel({ selectedDate }) {
     }
   }
 
-  function handleCreate(title) {
+  function handleCreate(data) {
     setSaving(true)
-    const dueDate = toDateParam(modalDate)
-    createTodo(title, dueDate)
+    createTodo(data)
       .then(created => {
-        if (view === 'day') {
-          setTodos(prev => [...prev, created])
+        if (!created.recurrenceType) {
+          if (view === 'day') {
+            setTodos(prev => [...prev, created])
+          } else {
+            setWeekData(prev => prev.map(entry =>
+              toDateParam(entry.date) === created.dueDate
+                ? { ...entry, todos: [...entry.todos, created] }
+                : entry
+            ))
+          }
+          setSaving(false)
+          setModalDate(null)
         } else {
-          setWeekData(prev => prev.map(entry =>
-            toDateParam(entry.date) === dueDate
-              ? { ...entry, todos: [...entry.todos, created] }
-              : entry
-          ))
+          return refetch().then(() => { setSaving(false); setModalDate(null) })
         }
-        setSaving(false)
-        setModalDate(null)
       })
       .catch(err => { alert(`Failed to create todo: ${err.message}`); setSaving(false) })
   }
 
-  function handleToggle(todo) {
-    toggleTodo(todo.id)
-      .then(updateTodoInState)
+  function handleToggle(todo, dateParam) {
+    toggleTodo(todo.id, dateParam)
+      .then(updated => {
+        if (!todo.recurrenceType || view === 'day') {
+          updateTodoInState(updated)
+        } else {
+          // Recurring in week view: update only the specific date column
+          setWeekData(prev => prev.map(entry =>
+            toDateParam(entry.date) === dateParam
+              ? { ...entry, todos: entry.todos.map(t => t.id === updated.id ? updated : t) }
+              : entry
+          ))
+        }
+      })
       .catch(err => alert(`Failed to update todo: ${err.message}`))
   }
 
-  function handleDelete(id) {
-    deleteTodo(id)
-      .then(() => removeTodoFromState(id))
+  function handleDelete(id, dateParam) {
+    deleteTodo(id, dateParam)
+      .then(() => {
+        if (dateParam) {
+          if (view === 'day') {
+            setTodos(prev => prev.filter(t => t.id !== id))
+          } else {
+            setWeekData(prev => prev.map(entry =>
+              toDateParam(entry.date) === dateParam
+                ? { ...entry, todos: entry.todos.filter(t => t.id !== id) }
+                : entry
+            ))
+          }
+        } else {
+          removeTodoFromState(id)
+        }
+      })
       .catch(err => alert(`Failed to delete todo: ${err.message}`))
   }
 
-  function handleEdit(title) {
+  function handleEdit(data) {
     setSaving(true)
-    updateTodo(editingTodo.id, title, editingTodo.completed, toDateParam(selectedDate))
-      .then(updated => { updateTodoInState(updated); setSaving(false); setEditingTodo(null) })
+    updateTodo(editingTodo.id, { completed: editingTodo.completed, ...data })
+      .then(() => refetch())
+      .then(() => { setSaving(false); setEditingTodo(null) })
       .catch(err => { alert(`Failed to update todo: ${err.message}`); setSaving(false) })
   }
 
@@ -138,6 +170,7 @@ export default function TodoPanel({ selectedDate }) {
       {modalDate && (
         <TodoModal
           heading="New Todo"
+          selectedDate={modalDate}
           submitLabel="Add"
           saving={saving}
           onSubmit={handleCreate}
@@ -148,11 +181,17 @@ export default function TodoPanel({ selectedDate }) {
       {editingTodo && (
         <TodoModal
           heading="Edit Todo"
-          initialValue={editingTodo.title}
+          initialValues={editingTodo}
+          selectedDate={selectedDate}
           submitLabel="Save"
           saving={saving}
           onSubmit={handleEdit}
           onClose={() => setEditingTodo(null)}
+          onDeleteSeries={editingTodo.recurrenceType ? () => {
+            deleteTodo(editingTodo.id)
+              .then(() => { removeTodoFromState(editingTodo.id); setEditingTodo(null) })
+              .catch(err => alert(`Failed to delete series: ${err.message}`))
+          } : undefined}
         />
       )}
     </div>

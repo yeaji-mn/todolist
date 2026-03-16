@@ -18,22 +18,27 @@ public class Todo {
     private String title;
     private boolean completed;
     private LocalDate dueDate;
+    private String recurrenceType; // null = not recurring; WEEKLY, MONTHLY, YEARLY
+    private Integer dayOfWeek;     // ISO: 1=Mon..7=Sun, used for WEEKLY
+    private Integer dayOfMonth;    // 1-31, used for MONTHLY and YEARLY
+    private Integer monthOfYear;   // 1-12, used for YEARLY
 
     public Todo() {}
-
-    public Todo(Long id, String title, boolean completed, LocalDate dueDate) {
-        this.id = id;
-        this.title = title;
-        this.completed = completed;
-        this.dueDate = dueDate;
-    }
 
     public Long getId() { return id; }
     public String getTitle() { return title; }
     public boolean isCompleted() { return completed; }
     public LocalDate getDueDate() { return dueDate; }
+    public String getRecurrenceType() { return recurrenceType; }
+    public Integer getDayOfWeek() { return dayOfWeek; }
+    public Integer getDayOfMonth() { return dayOfMonth; }
+    public Integer getMonthOfYear() { return monthOfYear; }
 
     public void setTitle(String title) { this.title = title; }
     public void setCompleted(boolean completed) { this.completed = completed; }
     public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+    public void setRecurrenceType(String recurrenceType) { this.recurrenceType = recurrenceType; }
+    public void setDayOfWeek(Integer dayOfWeek) { this.dayOfWeek = dayOfWeek; }
+    public void setDayOfMonth(Integer dayOfMonth) { this.dayOfMonth = dayOfMonth; }
+    public void setMonthOfYear(Integer monthOfYear) { this.monthOfYear = monthOfYear; }
 }
